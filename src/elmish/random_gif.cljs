@@ -3,7 +3,7 @@
    [cljs.core.async :refer [put! chan]]
    [cljs.core.match :refer-macros [match]]
    [cljs-http.client :as http]
-   [clojure.core.typed.check.get :as http]))
+   ))
 
 
 (defn init [topic]
@@ -17,14 +17,17 @@
    [action]
 
    [:request-more]
-   (do
-     (put! http-port (:topic model))
-     model)
+   [model
+    {:effect :http-get
+     :url (make-url (:topic model))}]
 
    [[:new-gif maybe-url]]
-   (if maybe-url
-     (assoc model :gif-url maybe-url)
-     model)))
+   (let [new-model (if maybe-url
+                     (assoc model :gif-url maybe-url)
+                     model)]
+     [new-model
+      nil])
+   ))
 
 (defn img-style [url]
   {"display" "inline-block"
