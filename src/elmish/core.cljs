@@ -3,6 +3,7 @@
     (:require
      [cljs.core.async :refer [chan put!]]
      [cljs.core.match :refer-macros [match]]
+     [elmish.random-gif :as gif]
      [reagent.core :as reagent :refer [atom]]))
 
 (enable-console-print!)
@@ -10,14 +11,17 @@
 (println "EEdits to this text should show up in your developer console.")
 
 ;; Model
-(defonce model (atom {:count 1}))
+(defonce model
+  (atom
+   {:left (gif/init "cats")
+    :right (gif/init "dogs")}))
 
 
 ;; Update
 (defn -update ;; prefix to avoid name collision with cljs.core
   [action model]
   (println "Action: " action)
-  
+
   (case action
     :inc
     (update-in model [:count] inc)))
@@ -27,8 +31,9 @@
 (defn view
   [chan model]
   [:div
-   [:button {:on-click #(put! chan :inc)} "Click Me!"]
-   [:p (str "You clicked me " (:count model) " times.")]])
+   (gif/view chan (:left model)) ;; TODO: map chan :left
+   (gif/view chan (:right model))
+   ])
 
 
 
@@ -47,6 +52,6 @@
     (reset! model new-model)
     (recur)))
 
-(reagent/render-component 
+(reagent/render-component
  [app action-chan model]
  (. js/document (getElementById "app")))
