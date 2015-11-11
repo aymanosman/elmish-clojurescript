@@ -1,4 +1,5 @@
 (ns elmish.random-gif
+  (:require-macros [cljs.core.async.macros :refer [go go-loop]])
   (:require
    [cljs.core.async :refer [put! chan]]
    [cljs.core.match :refer-macros [match]]
@@ -11,6 +12,9 @@
    :gif-url "images/waiting.gif"})
 
 (def http-port (chan)) ;; TODO
+
+(defn make-url [topic]
+  "")
 
 (defn -update [action model]
   (match
@@ -35,17 +39,19 @@
    "height" "200px"
    "background-image" (str "url(" url ")")})
 
-(defn view [chan {:keys [model gif-url]}]
+(defn view [chan {:keys [topic gif-url]}]
   [:div {:style {"width" "200px"}}
    [:h2 topic]
    [:div {:style (img-style gif-url)}]
-   [:button {:on-click #(put! chan :request-more)}]
+   [:button {:on-click #(put! chan :request-more)}
+    "More"]
    ])
 
 (go-loop []
   (let [topic (<! http-port)
-        response (<! (http/get "http://api.giphy.com/v1/gifs/random"
-                               {:query-params {"api_key" "dc6zaTOxFJmzC"
-                                               "tag" topic}}))]
+        response (<! (http/get
+                      "http://api.giphy.com/v1/gifs/random"
+                      {:query-params {"api_key" "dc6zaTOxFJmzC"
+                                      "tag" topic}}))]
 
     ))
