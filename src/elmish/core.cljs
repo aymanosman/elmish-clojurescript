@@ -17,8 +17,11 @@
 (defn -update ;; prefix to avoid name collision with cljs.core
   [action model]
   (println "Action: " action)
-  
   (case action
+
+    :dec
+    (update model :count dec)
+
     :inc
     (update-in model [:count] inc)))
 
@@ -28,6 +31,7 @@
   [chan model]
   [:div
    [:button {:on-click #(put! chan :inc)} "Click Me!"]
+   [:button {:on-click #(put! chan :dec)} "I will decrement!"] 
    [:p (str "You clicked me " (:count model) " times.")]])
 
 
