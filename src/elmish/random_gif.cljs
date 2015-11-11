@@ -24,5 +24,14 @@
      (assoc model :gif-url maybe-url)
      model)))
 
+(defn img-style [url]
+  {"display" "inline-block"
+   "width" "200px"
+   "height" "200px"
+   "background-image" (str "url(" url ")")})
+
 (defn view [chan model]
-  [:div "todosz"])
+  [:div {:style {"width" "200px"}}
+   [:h2 (:topic model)]
+   [:div {:style (img-style (:gif-url model))}]
+   ])
