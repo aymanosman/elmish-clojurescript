@@ -24,7 +24,11 @@
 
   (case action
     :inc
-    (update-in model [:count] inc)))
+    (update-in model [:count] inc)
+
+    ;;[:left act]
+    ;; (gif/-update act (:left model)) -> assoc model :left
+    ))
 
 
 ;; View
@@ -35,6 +39,8 @@
    (gif/view chan (:right model))
    ])
 
+
+(def task-queue (chan)) ;; Signal Task?
 
 
 ;; Plumbing
