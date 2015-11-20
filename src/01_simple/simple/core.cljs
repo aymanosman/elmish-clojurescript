@@ -13,6 +13,10 @@
 (println "Hello Simple Example!")
 
 ;; Helper
+;; A Question remains: should 'forward-to' remain as flexible as it is by
+;; allowing the user to apply ANY function over the stream of values, or should
+;; this be restricted to accepting a keyword to only support the intended use
+;; case of 'wrapping' a nested action so that it can be identified later on?
 (defn forward-to [to f]
   "Returns a new channel which will have its values piped to the channel
 provided, applying the function f to each value"
