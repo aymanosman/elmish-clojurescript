@@ -9,6 +9,7 @@
 ;; Update
 (defn -update ;; prefix to avoid name collision with cljs.core
   [action model]
+  ;; (println action)
 
   (case action
     :inc

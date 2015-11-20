@@ -1,4 +1,6 @@
 (ns ^:figwheel-always simple.core
+  "This demonstrates that it is possible to copy the simple Elm Architecture in
+  ClojureScript"
   (:require-macros [cljs.core.async.macros :refer [go go-loop]])
   (:require
    [simple.counter :as counter] 
@@ -10,39 +12,41 @@
 
 (println "Hello Simple Example!")
 
+;; Helper
+(defn forward-to [to f]
+  "Returns a new channel which will have its values piped to the channel
+provided, applying the function f to each value"
+  (let [from (chan)]
+    (async/pipe (async/map f [from]) to)
+    from))
+
 ;; Model
 (def init
   {:left (counter/init 0)
    :right (counter/init 18)})
 
 
-(defn -update [action model]
+(defn -update [action {:keys [left right] :as model}]
+  ;; (println action)
+
   (match
    [action]
 
    [[:left act]]
-   (do
-     (println "hey mambo")
-     (update-in model [:left] (counter/-update act (:left model))))
+   (assoc model :left (counter/-update act left))
 
    [[:right act]]
-   (do
-     (println "mambo italiano")
-     (update-in model [:left] (counter/-update act (:left model))))
+   (assoc model :right (counter/-update act right))
 
    [_]
-   (println "Fail")
-   ))
+   (println "Failed pattern match")))
 
 ;; View
 (defn view
-  [chan model]
+  [chan {:keys [left right]}]
   [:div
-   ;; Problem: I'm creating a new channel, but not one that forwards to the old
-   ;; channel. That means the `action-chan' below is not receiving the right
-   ;; messages.
-   (counter/view (async/map (fn [act] [:left act]) [chan]) (:left model))
-   (counter/view (async/map (fn [act] [:right act]) [chan]) (:right model))
+   (counter/view (forward-to chan #(vector :left %)) left)
+   (counter/view (forward-to chan #(vector :right %)) right)
    ])
 
 ;; Plumbing
