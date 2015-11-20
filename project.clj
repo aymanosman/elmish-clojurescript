@@ -20,18 +20,29 @@
 
   :cljsbuild {
     :builds [{:id "dev"
-              :source-paths ["src"]
+              :source-paths ["src/effects"]
 
               :figwheel { :on-jsload "elmish.core/on-js-reload" }
 
               :compiler {:main elmish.core
                          :asset-path "js/compiled/out"
-                         :output-to "resources/public/js/compiled/elmish.js"
+                         :output-to "resources/public/js/compiled/bundle.js"
                          :output-dir "resources/public/js/compiled/out"
                          :source-map-timestamp true }}
+
+             {:id "simple"
+              :source-paths ["src/01_simple"]
+              :figwheel true
+
+              :compiler {:main simple.core
+                         :asset-path "js/compiled/simple/out"
+                         :output-to "resources/public/js/compiled/bundle.js"
+                         :output-dir "resources/public/js/compiled/simple/out"
+                         :source-map-timestamp true }}
+
              {:id "min"
               :source-paths ["src"]
-              :compiler {:output-to "resources/public/js/compiled/elmish.js"
+              :compiler {:output-to "resources/public/js/compiled/bundle.js"
                          :main elmish.core
                          :optimizations :advanced
                          :pretty-print false}}]}
