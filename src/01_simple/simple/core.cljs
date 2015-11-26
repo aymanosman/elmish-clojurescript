@@ -3,7 +3,7 @@
   ClojureScript"
   (:require-macros [cljs.core.async.macros :refer [go go-loop]])
   (:require
-   [simple.counter :as counter] 
+   [simple.counter :as counter]
    [cljs.core.async :as async :refer [chan put!]]
    [cljs.core.match :refer-macros [match]]
    [reagent.core :as reagent :refer [atom]]))

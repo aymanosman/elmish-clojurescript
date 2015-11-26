@@ -2,6 +2,15 @@
 
 FIXME: Write a one-line description of your library/project.
 
+## Run with Docker
+You will need to change the line `:figwheel true` to
+`:figwheel {:websocket-host "dockerhost"}` in `project.clj`
+```sh
+docker run -it --name clojure-dev -v `pwd`:/code -p 3449:3449 clojure bash
+cd /code
+lein figwheel simple
+```
+
 ## Overview
 
 FIXME: Write a paragraph about the library/project and highlight its goals.
@@ -30,7 +39,7 @@ To create a production build run:
     lein cljsbuild once min
 
 And open your browser in `resources/public/index.html`. You will not
-get live reloading, nor a REPL. 
+get live reloading, nor a REPL.
 
 ## License
 
